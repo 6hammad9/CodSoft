@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Chatbot Web App</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 300px;
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .message-box {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+
+    .user-message {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    .initial-prompt {
+      font-style: italic;
+    }
+
+    #chat-form {
+      display: flex;
+      align-items: center;
+    }
+
+    #user-input {
+      flex: 1;
+      margin-right: 10px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Chatbot</h1>
+    {% if is_initial_prompt %}
+        <div class="initial-prompt">
+            <p>What is your name?</p>
+        </div>
+    {% else %}
+       <h2 id="name-prompt">Please write your name</h2>
+    {% endif %}
+    <div class="message-box" id="message-box">
+        <!-- Messages will be displayed here -->
+    </div>
+    <form id="chat-form">
+        <input type="text" id="user-input" placeholder="Type your message..." {% if is_initial_prompt %}style="display: none;"{% endif %} required>
+        <button type="submit">Send</button>
+    </form>
+  </div>
+
+ <script>
+    var isNameProvided = false;
+    var exitCommandReceived = false;
+
+    document.getElementById("chat-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+      var userInput = document.getElementById("user-input").value;
+
+      if (!isNameProvided && userInput.trim() !== "") {
+        document.getElementById("name-prompt").style.display = "none";
+        isNameProvided = true;
+      } else if (exitCommandReceived) {
+        document.getElementById("name-prompt").style.display = "block";
+        isNameProvided = false;
+        exitCommandReceived = false;
+      }
+
+      // Create a new XMLHttpRequest object
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/process_chat", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onload = function () {
+        if (xhr.status == 200) {
+          var response = JSON.parse(xhr.responseText);
+          var messageBox = document.getElementById("message-box");
+          messageBox.innerHTML += '<div class="user-message"><p>' + userInput + '</p></div>';
+          messageBox.innerHTML += '<div class="chatbot-message"><p>' + response.message + '</p></div>';
+          document.getElementById("user-input").value = "";
+          messageBox.scrollTop = messageBox.scrollHeight;
+
+          if (response.message.toLowerCase().includes('goodbye')) {
+            exitCommandReceived = true;  // Set exitCommandReceived to true when 'Goodbye' is detected
+            setTimeout(function() {
+              location.reload();
+            }, 2000);
+          }
+        }
+      };
+
+      var encodedUserInput = encodeURIComponent(userInput);
+      xhr.send("user_input=" + encodedUserInput);
+    });
+</script>
+</body>
+</html>
