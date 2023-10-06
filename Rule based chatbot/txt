@@ -1,1 +1,36 @@
+Chatbot Web Application with Flask and JavaScript
 
+This repository contains a simple web-based chatbot application implemented using Flask, JavaScript, and AJAX. The chatbot interacts with users, providing information about services, pricing, and location.
+
+Features:
+
+Flask Backend: The backend is powered by Flask, a lightweight web framework in Python.
+AJAX Communication: Interactive user experience facilitated through asynchronous communication using AJAX.
+Dynamic UI: The user interface dynamically hides/shows elements based on user input, providing a seamless conversational flow.
+How It Works:
+
+Users can interact with the chatbot via a web interface.
+The chatbot responds to user queries about services, pricing, and location.
+It prompts users to provide their name, hiding the name prompt after the first input, and resetting it upon receiving an exit command.
+Exit command triggers a reload after a delay, resetting the conversation for the next user.
+Technologies Used:
+
+Frontend: HTML, CSS, JavaScript
+Backend: Flask (Python)
+Communication: AJAX (XMLHttpRequest)
+How to Use:
+
+Clone the repository: git clone https://github.com/your-username/chatbot-web-app.git
+Navigate to the project directory: cd chatbot-web-app
+Install dependencies (if any): pip install -r requirements.txt
+Run the Flask application: python app.py
+Access the chatbot in your browser: http://localhost:5000
+Feel free to explore, contribute, and enhance the chatbot functionality!
+
+Contributing:
+Contributions are welcome! If you have ideas for improvements or new features, create a pull request or open an issue to discuss changes.
+
+License:
+This project is licensed under the MIT License, allowing you to use the code in your own projects.
+
+Please replace "your-username" with your actual GitHub username and ensure that the license file (LICENSE) is included in your repository. You can customize the description further based on your specific project details and goals.
